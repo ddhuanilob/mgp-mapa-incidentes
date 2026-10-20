@@ -1,0 +1,159 @@
+<title>Víctimas y victimarios 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a case-file register. Header with counts, a filter bar, then one dense table that scrolls inside its own box. */
+:root {
+  --bg: #f6f6f3; --surface: #ffffff; --fg: #1d2126; --muted: #5e6670; --line: #dcdcd5;
+  --accent: #9a2f22; --accent-soft: #f4e4e0;
+  --dead: #9a2f22; --hurt: #b0640f; --property: #3d5a80; --none: #7a8088; --ok: #2f6b45;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15181c; --surface: #1d2126; --fg: #e8e8e3; --muted: #9aa2ab; --line: #30353c;
+  --accent: #e07a68; --accent-soft: #3a2420;
+  --dead: #e07a68; --hurt: #e0a050; --property: #8fb0d8; --none: #8a9099; --ok: #7cc196; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15181c; --surface: #1d2126; --fg: #e8e8e3; --muted: #9aa2ab; --line: #30353c;
+  --accent: #e07a68; --accent-soft: #3a2420;
+  --dead: #e07a68; --hurt: #e0a050; --property: #8fb0d8; --none: #8a9099; --ok: #7cc196; color-scheme: dark }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 1400px; margin: 0 auto; padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 20px; }
+header { display: grid; gap: 6px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(26px, 4vw, 38px); line-height: 1.1; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 70ch; margin: 0; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 28px; font-variant-numeric: tabular-nums; }
+.stat b { font-family: var(--display); font-size: 22px; display: block; }
+.stat span { font-size: 13px; color: var(--muted); }
+.filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.filters label { display: grid; gap: 3px; font-size: 12px; color: var(--muted); letter-spacing: .03em; }
+.filters input, .filters select { font: inherit; font-size: 14px; color: var(--fg); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; min-width: 0; }
+.filters input { width: min(320px, 80vw); }
+.filters input:focus-visible, .filters select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+button { font: inherit; font-size: 14px; cursor: pointer; background: var(--surface); color: var(--fg);
+  border: 1px solid var(--line); border-radius: 4px; padding: 6px 12px; }
+button:disabled { opacity: .45; cursor: default; }
+.count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tablebox { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); border-radius: 4px; min-width: 0; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--mono); font-weight: 500; font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--muted); position: sticky; top: 0; background: var(--surface); white-space: nowrap; }
+td.num, td.mono { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.tit { min-width: 300px; max-width: 420px; }
+td .sd { color: var(--muted); opacity: .7; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; white-space: nowrap; border: 1px solid currentColor; }
+.p-dead { color: var(--dead); } .p-hurt { color: var(--hurt); } .p-prop { color: var(--property); }
+.p-none { color: var(--none); } .p-ok { color: var(--ok); }
+.role { font-weight: 600; }
+.role.vrio { color: var(--accent); }
+a { color: var(--property); }
+.pager { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+footer { font-size: 13px; color: var(--muted); max-width: 80ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">MGP · Grupo 1 · Avance</div>
+    <h1>Víctimas y victimarios en el mapa de incidentes 2026</h1>
+    <p class="lede">Cada fila es una persona, empresa u objetivo afectado, o un victimario, extraído del titular de cada incidente del mapa «Extorsión y Crímenes Violentos – Perú [2026]». Los atributos que el titular no menciona aparecen como <span class="sd">sin dato</span>.</p>
+  </header>
+  <div class="stats" id="stats"></div>
+  <div class="filters">
+    <label for="q">Buscar en cualquier columna<input id="q" type="search" placeholder="chofer, Etmosa, menor, Callao…"></label>
+    <label for="f-rol">Rol<select id="f-rol"></select></label>
+    <label for="f-evento">Tipo de evento<select id="f-evento"></select></label>
+    <label for="f-actor">Tipo de actor<select id="f-actor"></select></label>
+    <label for="f-estado">Estado o situación<select id="f-estado"></select></label>
+    <label for="f-rubro">Rubro<select id="f-rubro"></select></label>
+  </div>
+  <div class="count" id="count"></div>
+  <div class="tablebox"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+  <div class="pager"><button id="prev" type="button">Anterior</button><button id="next" type="button">Siguiente</button><span class="count" id="page"></span></div>
+  <footer>Método: reglas en Python sobre el titular (ver <code>src/extraer_actores.py</code>). Es una primera versión: revisa la columna «Titular» y el enlace a la fuente ante cualquier duda.</footer>
+</div>
+
+<script>
+const DATA = /*__DATOS__*/null;
+const C = Object.fromEntries(DATA.columnas.map((c, i) => [c, i]));
+const rows = DATA.filas;
+const SHOW = [
+  ["id_incidente", "Incidente", "mono"], ["fecha", "Fecha", "mono"], ["tipo_evento", "Evento"], ["rol", "Rol"],
+  ["titular", "Titular", "tit"],
+  ["tipo_actor", "Tipo de actor"], ["cantidad", "Cant."], ["nombre_o_alias", "Nombre / alias"], ["sexo", "Sexo"],
+  ["edad", "Edad", "num"], ["grupo_etario", "Grupo etario"], ["nacionalidad", "Nacionalidad"], ["ocupacion", "Ocupación / tipo"],
+  ["rubro", "Rubro"], ["organizacion_vinculada", "Organización"], ["antecedentes", "Antecedentes"],
+  ["estado_o_situacion", "Estado / situación"], ["ambito", "Ámbito"]
+];
+const PAGE = 50;
+let page = 0, view = rows;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+function fillSelect(id, col) {
+  const counts = {};
+  rows.forEach(r => counts[r[C[col]]] = (counts[r[C[col]]] || 0) + 1);
+  const opts = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  $(id).innerHTML = `<option value="">Todos</option>` + opts.map(([v, n]) => `<option value="${esc(v)}">${esc(v || "(vacío)")} (${n})</option>`).join("");
+}
+const FILTERS = [["f-rol", "rol"], ["f-evento", "tipo_evento"], ["f-actor", "tipo_actor"], ["f-estado", "estado_o_situacion"], ["f-rubro", "rubro"]];
+FILTERS.forEach(([id, col]) => fillSelect(id, col));
+
+function statePill(v) {
+  let k = "p-none";
+  if (v.startsWith("Fallecido") || v.startsWith("Abatido")) k = "p-dead";
+  else if (v.startsWith("Herido") || v.startsWith("Secuestrado") || v.startsWith("Amenazado")) k = "p-hurt";
+  else if (v.startsWith("Atacado")) k = "p-prop";
+  else if (v.startsWith("Capturado")) k = "p-ok";
+  return `<span class="pill ${k}">${esc(v)}</span>`;
+}
+function cell(r, [col, , cls]) {
+  const v = r[C[col]];
+  if (col === "estado_o_situacion") return `<td>${statePill(v)}</td>`;
+  if (col === "rol") return `<td class="role ${v === "Victimario" ? "vrio" : ""}">${esc(v)}</td>`;
+  if (col === "titular") {
+    const link = r[C.fuente_url] ? ` <a href="${esc(r[C.fuente_url])}" target="_blank" rel="noopener">fuente</a>` : "";
+    return `<td class="tit">${esc(v)}${link}</td>`;
+  }
+  if (v === "" || v === "Sin dato") return `<td class="${cls || ""}"><span class="sd">${v === "" ? "–" : "sin dato"}</span></td>`;
+  return `<td class="${cls || ""}">${esc(v)}</td>`;
+}
+function stats() {
+  const vict = rows.filter(r => r[C.rol] === "Víctima");
+  const pers = vict.filter(r => r[C.tipo_actor] === "Persona");
+  const incid = new Set(rows.map(r => r[C.id_incidente])).size;
+  const items = [
+    [incid, "incidentes"], [rows.length, "filas en la tabla"], [pers.length, "víctimas (personas)"],
+    [pers.filter(r => r[C.estado_o_situacion] === "Fallecido").length, "fallecidos"],
+    [vict.filter(r => r[C.estado_o_situacion].startsWith("Atacado (daños")).length, "vehículos, negocios y viviendas atacados"],
+    [rows.filter(r => r[C.rol] === "Victimario").length, "filas de victimarios"]
+  ];
+  $("stats").innerHTML = items.map(([n, l]) => `<div class="stat"><b>${n.toLocaleString("es-PE")}</b><span>${l}</span></div>`).join("");
+}
+function apply() {
+  const q = $("q").value.trim().toLowerCase();
+  const sel = FILTERS.map(([id, col]) => [C[col], $(id).value]).filter(([, v]) => v !== "");
+  view = rows.filter(r => sel.every(([i, v]) => r[i] === v) && (!q || r.join(" ").toLowerCase().includes(q)));
+  page = 0; render();
+}
+function render() {
+  const pages = Math.max(1, Math.ceil(view.length / PAGE));
+  const slice = view.slice(page * PAGE, page * PAGE + PAGE);
+  $("tbody").innerHTML = slice.map(r => `<tr>${SHOW.map(s => cell(r, s)).join("")}</tr>`).join("");
+  $("count").textContent = `${view.length.toLocaleString("es-PE")} filas coinciden`;
+  $("page").textContent = `Página ${page + 1} de ${pages}`;
+  $("prev").disabled = page === 0; $("next").disabled = page >= pages - 1;
+}
+$("thead").innerHTML = `<tr>${SHOW.map(([, h]) => `<th>${h}</th>`).join("")}</tr>`;
+$("q").addEventListener("input", apply);
+FILTERS.forEach(([id]) => $(id).addEventListener("change", apply));
+$("prev").addEventListener("click", () => { page--; render(); });
+$("next").addEventListener("click", () => { page++; render(); });
+stats(); render();
+</script>
